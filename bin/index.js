@@ -49,7 +49,7 @@ inquirer
       type: 'rawlist',
       name: 'css',
       message: chalk.blue('\nCSS flavor: '),
-      choices: ['SCSS', 'Tailwind'],
+      choices: ['SCSS', 'Tailwind', 'BootstrapCDN'],
       filter(val) {
         return val.toLowerCase();
       },
@@ -69,7 +69,7 @@ inquirer
 
     //
     //
-    // ------ Start of the building ------
+    // ---------------------------- Building ---------------------------- //
     //
     //
 
@@ -77,7 +77,7 @@ inquirer
     const folderName = './'+project;
 
     //
-    // ------ Creating FOLDERS ------
+    // ---------------------- Creating FOLDERS ---------------------- //
     //
 
     //
@@ -90,8 +90,6 @@ inquirer
 
       if (!fs.existsSync(folderName)) {
         fs.mkdirSync(folderName);
-
-        console.log('folder ' + project + ' is created!')
 
       //
       // --- Src Folder --- 
@@ -157,7 +155,191 @@ inquirer
       }
 
 
-       // FILE: /src/pages/index.njk
+      //
+      // --- Partials ---
+      //
+
+      try {
+
+        // FOLDER: /src/partials
+
+        if (!fs.existsSync(folderName+'/src/partials', { recursive: true })) {
+          fs.mkdirSync(folderName+'/src/partials', { recursive: true });
+
+        }
+      } catch (err) {
+        console.error(err);
+      }
+
+
+      //
+      // --- Scripts ---
+      //
+
+      try {
+
+        // FOLDER: src/scripts
+
+        if (!fs.existsSync(folderName+'/src/scripts', { recursive: true })) {
+          fs.mkdirSync(folderName+'/src/scripts', { recursive: true });
+          console.log('/src/scripts created.')
+        }
+      } catch (err) {
+        console.error(err);
+      }
+
+      //
+      //  --- JavaScript ---
+      //
+
+      if (answers.js === 'javascript') {
+
+        try {
+
+          // FOLDER: src/scripts/js
+
+          if (!fs.existsSync(folderName+'/src/scripts/js', { recursive: true })) {
+            fs.mkdirSync(folderName+'/src/scripts/js', { recursive: true });
+          }
+        } catch (err) {
+          console.error(err);
+        }
+        
+      }
+
+
+      //
+      // --- Static ---
+      //
+
+      try {
+        if (!fs.existsSync(folderName+'/src/static', { recursive: true })) {
+          fs.mkdirSync(folderName+'/src/static', { recursive: true });
+          console.log('/src/static created.')
+        }
+      } catch (err) {
+        console.error(err);
+      }
+
+      //
+      // --- Styles ---
+      //
+
+      try {
+
+        // FOLDER: src/styles
+
+        if (!fs.existsSync(folderName+'/src/styles', { recursive: true })) {
+          fs.mkdirSync(folderName+'/src/styles', { recursive: true });
+ 
+        }
+      } catch (err) {
+        console.error(err);
+      }
+
+
+      //
+      // --- SCSS ---
+      //
+
+      if(answers.css === 'scss' || answers.css === 'bootstrapcdn') {
+
+        try {
+
+          // FOLDER: src/styles/sass
+
+          if (!fs.existsSync(folderName+'/src/styles/sass', { recursive: true })) {
+            fs.mkdirSync(folderName+'/src/styles/sass', { recursive: true });
+
+          }
+        
+          // FILE: src/styles/sass/sassy.scss
+        
+        const sassyContent = `
+        /** src/styles/sass/sassy.scss **/
+        `;
+
+        fs.writeFile(folderName+'/src/styles/sass/sassy.scss', sassyContent, err => {
+          if (err) {
+            console.error(err);
+          }
+
+        });
+        
+        } catch (err) {
+          console.error(err);
+        }
+
+      }
+      
+
+      //
+      // ----------------------  Creating FILES  ---------------------------- //
+      //
+
+
+      //
+      // --- FILE: src/layouts/base.njk
+      //
+
+      // FILE: /src/layouts/base.njk
+
+      let cssfile = '';
+
+      if(answers.css === 'scss') {
+        cssfile = "<link rel=\"stylesheet\" src=\"css/sassy.css\" />";
+      } else if (answers.css === 'bootstrapcdn') {
+        cssfile = `
+        <!-- Bootstrap CDN -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <!-- Custom styles from src/styles/sass/sassy.scss -->
+        <link rel=\"stylesheet\" src=\"css/sassy.css\" />`
+      }  
+      else if (answers.css === 'tailwind') {
+        cssfile = "<link rel=\"stylesheet\" src=\"css/tw.css\" />"
+      }  
+      
+        const layoutBase = `
+<!DOCTYPE html>
+<html lang="en">
+    <head x-data="data">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="Zou!" />
+    <title>{% block pageTitle %}{% endblock %} {{data.appName}}</title>
+    <meta name="description" content="{% block pageDesc %}{% endblock %}">
+    <link rel="author" href="/humans.txt" />
+    <link rel="icon" href="/favicon.ico" />
+
+<!-- Fonts for the Welcome page -->    
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Caveat&display=swap" rel="stylesheet"> 
+   
+    ${cssfile}
+
+    {% block headStyles %}{% endblock %}
+    {% block headScripts %}{% endblock %}
+    </head>
+    <body x-data="data" x-init="init()">  
+
+        {% block main %}{% endblock %}
+        
+    <script src="/script.js"></script>
+
+    </body>
+</html>`;
+
+        fs.writeFile(folderName+'/src/layouts/base.njk', layoutBase, err => {
+          if (err) {
+            console.error(err);
+          }
+         
+        });
+
+
+        // FILE: /src/pages/index.njk
 
         const contentIndexPage = `
 {% extends "src/layouts/base.njk" %}
@@ -166,16 +348,16 @@ inquirer
 
 {# Actual visible content on the Page #}
 {% block main %}
+
 <main> 
 <a href="https://github.com/AndiKod/zou" title="Github">
 	<h1>Zou!<span>JS</span></h1>
 </a>
-<h5 class="fw-light ">— ${project} project by ${answers.author} —</h5>
+<h5>${project} project by ${answers.author}</h5>
 </main>
 
-<!-- Ridiculous minimal styles -->
-<script>
-@import url("https://fonts.googleapis.com/css2?family=Boogaloo&family=Caveat&display=swap");
+<!-- Minimal styles -->
+<style>
 
 body {
 	background: linear-gradient(-45deg, #e45126, #0c73b8, #f5be25, #86c232);
@@ -232,70 +414,22 @@ a:hover {
 	color: white;
 	transform: scale(1.1) rotate(4deg);
 }
-</script>
+</style>
 
 {% endblock %}`;
         fs.writeFile(folderName+'/src/pages/index.njk', contentIndexPage, err => {
           if (err) {
             console.error(err);
           }
-          //console.log('/src/pages/index.njk created.')
         });
 
 
 
-
       //
-      // --- Partials ---
+      // --- if Javascript ---
       //
-
-      try {
-
-        // FOLDER: /src/partials
-
-        if (!fs.existsSync(folderName+'/src/partials', { recursive: true })) {
-          fs.mkdirSync(folderName+'/src/partials', { recursive: true });
-
-        }
-      } catch (err) {
-        console.error(err);
-      }
-
-
-      //
-      // --- Scripts ---
-      //
-
-      try {
-
-        // FOLDER: src/scripts
-
-        if (!fs.existsSync(folderName+'/src/scripts', { recursive: true })) {
-          fs.mkdirSync(folderName+'/src/scripts', { recursive: true });
-          console.log('/src/scripts created.')
-        }
-      } catch (err) {
-        console.error(err);
-      }
-
-      //
-      //  --- JavaScript ---
-      //
-
+      
       if (answers.js === 'javascript') {
-
-        try {
-
-          // FOLDER: src/scripts/js
-
-          if (!fs.existsSync(folderName+'/src/scripts/js', { recursive: true })) {
-            fs.mkdirSync(folderName+'/src/scripts/js', { recursive: true });
-            console.log('/src/scripts/js created.')
-          }
-        } catch (err) {
-          console.error(err);
-        }
-
 
         // FILE: src/scripts/main.js
 
@@ -321,7 +455,7 @@ import Alpine from 'alpinejs';
 document.addEventListener('alpine:init', () => {
   Alpine.data('data', ()  => ({
 
-      name: 'Zou!',
+      name: '${project}',
 
       // Fired on x-init
       async init() {
@@ -342,49 +476,11 @@ document.addEventListener('alpine:init', () => {
 
 
       //
-      // --- Static ---
-      //
-
-      try {
-        if (!fs.existsSync(folderName+'/src/static', { recursive: true })) {
-          fs.mkdirSync(folderName+'/src/static', { recursive: true });
-          console.log('/src/static created.')
-        }
-      } catch (err) {
-        console.error(err);
-      }
-
-      //
-      // --- Styles ---
-      //
-
-      try {
-
-        // FOLDER: src/styles
-
-        if (!fs.existsSync(folderName+'/src/styles', { recursive: true })) {
-          fs.mkdirSync(folderName+'/src/styles', { recursive: true });
- 
-        }
-      } catch (err) {
-        console.error(err);
-      }
-
-
-      //
       // --- SCSS ---
       //
-
       if(answers.css === 'scss') {
 
         try {
-
-          // FOLDER: src/styles/sass
-
-          if (!fs.existsSync(folderName+'/src/styles/sass', { recursive: true })) {
-            fs.mkdirSync(folderName+'/src/styles/sass', { recursive: true });
-
-          }
         
           // FILE: src/styles/sass/sassy.scss
         
@@ -404,59 +500,6 @@ document.addEventListener('alpine:init', () => {
         }
 
       }
-      
-
-      //
-      // ------ Creating FILES ------
-      //
-
-
-      //
-      // --- FILE: src/layouts/base.njk
-      //
-
-      // FILE: /src/layouts/base.njk
-
-        const layoutBase = `
-<!DOCTYPE html>
-<html lang="en">
-    <head x-data="data">
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="generator" content="Zou!" />
-    <title>{% block pageTitle %}{% endblock %} {{data.appName}}</title>
-    <meta name="description" content="{% block pageDesc %}{% endblock %}">
-    <link rel="author" href="/humans.txt" />
-    <link rel="icon" href="/favicon.ico" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Caveat&display=swap" rel="stylesheet"> 
-
-    <link rel="stylesheet" src="css/sassy.css" />
-    <link rel="stylesheet" src="css/tw.css" />
-
-
-    {% block headStyles %}{% endblock %}
-    {% block headScripts %}{% endblock %}
-    </head>
-    <body x-data="data" x-init="init()">  
-
-        {% block main %}{% endblock %}
-        
-    <script src="/script.js"></script>
-
-    </body>
-</html>`;
-
-        fs.writeFile(folderName+'/src/layouts/base.njk', layoutBase, err => {
-          if (err) {
-            console.error(err);
-          }
-         
-        });
-
-
       
       //
       // --- Tailwind --- 
@@ -508,7 +551,7 @@ document.addEventListener('alpine:init', () => {
 // nunjucks.config.js
 
 const data = {
-  appName: 'zou',
+  appName: '${project}',
 };
 
 
@@ -594,24 +637,30 @@ module.exports = {
       let tsScript = ``; 
       
       if (answers.css === 'tailwind') {
-        tailwindScript = `"w-tw": "npx tailwindcss -i ./src/styles/tw-input.css -o ./public/css/tw.css --watch",`
+        tailwindScript = `
+        "w-tw": "npx tailwindcss -i ./src/styles/tw-input.css -o ./public/css/tw.css --watch",
+        "b-tw": "npx tailwindcss -i ./src/styles/tw-input.css -o ./public/css/tw.css --minify",`
       } else {
         tailwindScript = '';
       }
       if (answers.css === 'scss') {
         sassScript = `
-        "b-sass": "sass  --no-source-map src/styles/sass:public/css",
-        "w-sass": "sass  --no-source-map --watch src/styles/sass:public/css",`
+        "w-sass": "sass  --no-source-map --watch src/styles/sass:public/css",
+        "b-sass": "sass  --no-source-map src/styles/sass:public/css --style compressed",`
       } else {
         sassScript = '';
       }
       if (answers.js === 'javascript') {
-        jsScript = `"w-js": "npx esbuild src/scripts/main.js --outfile=public/script.js --bundle --watch",`
+        jsScript = `
+        "w-js": "npx esbuild src/scripts/main.js --outfile=public/script.js --bundle --watch",
+        "b-js": "npx esbuild src/scripts/main.js --outfile=public/script.js --bundle --minify",`
       } else {
         jsScript = '';
       }
       if (answers.js === 'typescript') {
-        tsScript = `"w-ts": "npx tsc --src src/scripts/main.ts --outdir public/js/tscript.js --watch",`
+        tsScript = `
+        "w-ts": "npx tsc --src src/scripts/main.ts --outdir public/js/tscript.js --watch",
+        "b-ts": "tsc src/scripts/main.ts --outFile public/tscript.js",`
       } else {
         tsScript = '';
       }
@@ -647,9 +696,10 @@ module.exports = {
     "copy": "npm-run-all --parallel c-*",
     "w-pages": "onchange \\"./src/**/*\\" -- npm run b-pages",
     "watch": "npm-run-all --parallel w-*",
+    "build": "npm-run-all --parallel b-*",
     "serve": "alive-server public",
     "dev": "npm-run-all copy b-pages --parallel watch serve",
-    "postbuild": "postcss public/css/sassy.css -u autoprefixer cssnano -r --no-map"
+    "postbuild": "postcss public/css/*.css -u autoprefixer cssnano -r --no-map"
   },
   "dependencies": {
     "alpinejs": "^3.13.2"
@@ -663,6 +713,7 @@ module.exports = {
     "npm-run-all": "^4.1.5",
     "alive-server": "^1.3.0",
     "postcss": "^8.4.31",
+    "postcss-cli": "^10.1.0",
     "autoprefixer": "^10.4.16",
     "cssnano": "^6.0.1"   
   }
@@ -677,6 +728,11 @@ module.exports = {
         // end create package.json
 
 
+
+      //
+      // ---------------------- End Message ---------------------- //
+      //  
+        
 
         console.log('\n'+chalk.magenta('Ok '+ chalk.bold(answers.author) +', you Rock!'))
         console.log(chalk.bold.whiteBright('Go: ')+ 'cd '+project+' && npm i')
