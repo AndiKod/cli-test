@@ -1,6 +1,6 @@
 {
   "name": "zou-create",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Scafold Zou! projects, little SSG built on NPM scripts like a tasks runner.",
   "main": "index.js",
   "type": "module",

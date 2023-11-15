@@ -104,7 +104,6 @@ inquirer
         try {
           if (!fs.existsSync(folderName + "/src", { recursive: true })) {
             fs.mkdirSync(folderName + "/src", { recursive: true });
-            console.log(folderName + "/src created.");
           }
         } catch (err) {
           console.error(err);
@@ -121,7 +120,6 @@ inquirer
             !fs.existsSync(folderName + "/src/layouts", { recursive: true })
           ) {
             fs.mkdirSync(folderName + "/src/layouts", { recursive: true });
-            console.log("/src/layouts created.");
           }
         } catch (err) {
           console.error(err);
@@ -134,7 +132,6 @@ inquirer
         try {
           if (!fs.existsSync(folderName + "/src/macros", { recursive: true })) {
             fs.mkdirSync(folderName + "/src/macros", { recursive: true });
-            console.log("/src/macros created.");
           }
         } catch (err) {
           console.error(err);
@@ -149,7 +146,6 @@ inquirer
 
           if (!fs.existsSync(folderName + "/src/pages", { recursive: true })) {
             fs.mkdirSync(folderName + "/src/pages", { recursive: true });
-            console.log("/src/pages created.");
           }
         } catch (err) {
           console.error(err);
@@ -182,7 +178,6 @@ inquirer
             !fs.existsSync(folderName + "/src/scripts", { recursive: true })
           ) {
             fs.mkdirSync(folderName + "/src/scripts", { recursive: true });
-            console.log("/src/scripts created.");
           }
         } catch (err) {
           console.error(err);
@@ -359,7 +354,7 @@ inquirer
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Caveat&display=swap" rel="stylesheet">
-    <!-- {% import '../../node_modules/zoumacros/cdn.njk' as cdn %} -->
+    <!-- {% import '../../node_modules/zoumacros/lib/cdn.njk' as cdn %} -->
     <!-- {{ cdn.pkg('bulma') }} -->
     <!-- https://github.com/AndiKod/zouMacros -->
     ${alpineCDN}
