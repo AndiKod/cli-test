@@ -1,34 +1,39 @@
 #! /usr/bin/env node
 
 // Imports
-import chalk from 'chalk';
-import inquirer from 'inquirer';
+import chalk from "chalk";
+import inquirer from "inquirer";
 
 // Define "require"
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 
-const fs = require('fs');
+const fs = require("fs");
 
 // ------------- End imports -------- //
 
 const args = process.argv.slice(2);
 if (args.length < 1) {
-  console.error('Name your project: npx zou-create myProject');
+  console.error("Name your project: npx zou-create myProject");
   process.exit(1); //an error occurred
 }
 if (args.length > 1) {
-  console.error('Your project name should have a single word, or hyphens ;)');
+  console.error("Your project name should have a single word, or hyphens ;)");
   process.exit(1); //an error occurred
 }
 
 let project = args[0];
 
-
-
-console.log(chalk.magenta.bold('-- Zou!',chalk.yellow('JS --')))
-console.log(chalk.red('HTML')+','+chalk.blue('CSS')+','+chalk.yellow('JS')+' & '+chalk.magenta('FUN'))
-
+console.log(chalk.magenta.bold("-- Zou!", chalk.yellow("JS --")));
+console.log(
+  chalk.red("HTML") +
+    "," +
+    chalk.blue("CSS") +
+    "," +
+    chalk.yellow("JS") +
+    " & " +
+    chalk.magenta("FUN")
+);
 
 inquirer
   .prompt([
@@ -41,24 +46,24 @@ inquirer
       },
     }, */
     {
-      type: 'input',
-      name: 'author',
-      message: chalk.whiteBright('\nAuthor: '),
+      type: "input",
+      name: "author",
+      message: chalk.whiteBright("\nAuthor: "),
     },
     {
-      type: 'rawlist',
-      name: 'css',
-      message: chalk.blue('CSS flavor: '),
-      choices: ['SCSS', 'Tailwind', 'BootstrapCDN'],
+      type: "rawlist",
+      name: "css",
+      message: chalk.blue("CSS flavor: "),
+      choices: ["SCSS", "Tailwind"],
       filter(val) {
         return val.toLowerCase();
       },
     },
     {
-      type: 'rawlist',
-      name: 'js',
-      message: chalk.yellow('What Scripting: '),
-      choices: ['Javascript', 'TypeScript'],
+      type: "rawlist",
+      name: "js",
+      message: chalk.yellow("What Scripting: "),
+      choices: ["Javascript", "TypeScript"],
       filter(val) {
         return val.toLowerCase();
       },
@@ -74,144 +79,140 @@ inquirer
     //
 
     // GET: The project Folder's name
-    const folderName = './'+project;
+    const folderName = "./" + project;
 
     //
     // ---------------------- Creating FOLDERS ---------------------- //
     //
 
     //
-    // --- Project's Folder --- 
-    //  
+    // --- Project's Folder ---
+    //
 
     try {
-
       // FOLDER: "root"
 
       if (!fs.existsSync(folderName)) {
         fs.mkdirSync(folderName);
 
-      //
-      // --- Src Folder --- 
-      //  
+        //
+        // --- Src Folder ---
+        //
 
-      // FOLDER: src
-
-      try {
-        if (!fs.existsSync(folderName+'/src', { recursive: true })) {
-          fs.mkdirSync(folderName+'/src', { recursive: true });
-          console.log(folderName+'/src created.')
-        }
-      } catch (err) {
-        console.error(err);
-      }
-
-      //
-      // --- Layouts ---
-      //
-
-      try {
-
-        // FOLDER: src/layouts
-
-        if (!fs.existsSync(folderName+'/src/layouts', { recursive: true })) {
-          fs.mkdirSync(folderName+'/src/layouts', { recursive: true });
-          console.log('/src/layouts created.')
-        }
-
-      } catch (err) {
-        console.error(err);
-      }
-
-
-      //
-      // --- Macros ---
-      //
-
-      try {
-        if (!fs.existsSync(folderName+'/src/macros', { recursive: true })) {
-          fs.mkdirSync(folderName+'/src/macros', { recursive: true });
-          console.log('/src/macros created.')
-        }
-      } catch (err) {
-        console.error(err);
-      }
-
-      //
-      // --- Pages ---
-      //
-
-      try {
-
-        // FOLDER: /src/pages
-
-        if (!fs.existsSync(folderName+'/src/pages', { recursive: true })) {
-          fs.mkdirSync(folderName+'/src/pages', { recursive: true });
-          console.log('/src/pages created.')
-        }
-
-      } catch (err) {
-        console.error(err);
-      }
-
-
-      //
-      // --- Partials ---
-      //
-
-      try {
-
-        // FOLDER: /src/partials
-
-        if (!fs.existsSync(folderName+'/src/partials', { recursive: true })) {
-          fs.mkdirSync(folderName+'/src/partials', { recursive: true });
-
-        }
-      } catch (err) {
-        console.error(err);
-      }
-
-
-      //
-      // --- Scripts ---
-      //
-
-      try {
-
-        // FOLDER: src/scripts
-
-        if (!fs.existsSync(folderName+'/src/scripts', { recursive: true })) {
-          fs.mkdirSync(folderName+'/src/scripts', { recursive: true });
-          console.log('/src/scripts created.')
-        }
-      } catch (err) {
-        console.error(err);
-      }
-
-      //
-      //  --- JavaScript ---
-      //
-
-      if (answers.js === 'javascript') {
+        // FOLDER: src
 
         try {
-
-          // FOLDER: src/scripts/js
-
-          if (!fs.existsSync(folderName+'/src/scripts/js', { recursive: true })) {
-            fs.mkdirSync(folderName+'/src/scripts/js', { recursive: true });
+          if (!fs.existsSync(folderName + "/src", { recursive: true })) {
+            fs.mkdirSync(folderName + "/src", { recursive: true });
+            console.log(folderName + "/src created.");
           }
         } catch (err) {
           console.error(err);
         }
-        
-      }
 
-      //
-      //  --- TypeScript ---
-      //
+        //
+        // --- Layouts ---
+        //
 
-      /*
+        try {
+          // FOLDER: src/layouts
+
+          if (
+            !fs.existsSync(folderName + "/src/layouts", { recursive: true })
+          ) {
+            fs.mkdirSync(folderName + "/src/layouts", { recursive: true });
+            console.log("/src/layouts created.");
+          }
+        } catch (err) {
+          console.error(err);
+        }
+
+        //
+        // --- Macros ---
+        //
+
+        try {
+          if (!fs.existsSync(folderName + "/src/macros", { recursive: true })) {
+            fs.mkdirSync(folderName + "/src/macros", { recursive: true });
+            console.log("/src/macros created.");
+          }
+        } catch (err) {
+          console.error(err);
+        }
+
+        //
+        // --- Pages ---
+        //
+
+        try {
+          // FOLDER: /src/pages
+
+          if (!fs.existsSync(folderName + "/src/pages", { recursive: true })) {
+            fs.mkdirSync(folderName + "/src/pages", { recursive: true });
+            console.log("/src/pages created.");
+          }
+        } catch (err) {
+          console.error(err);
+        }
+
+        //
+        // --- Partials ---
+        //
+
+        try {
+          // FOLDER: /src/partials
+
+          if (
+            !fs.existsSync(folderName + "/src/partials", { recursive: true })
+          ) {
+            fs.mkdirSync(folderName + "/src/partials", { recursive: true });
+          }
+        } catch (err) {
+          console.error(err);
+        }
+
+        //
+        // --- Scripts ---
+        //
+
+        try {
+          // FOLDER: src/scripts
+
+          if (
+            !fs.existsSync(folderName + "/src/scripts", { recursive: true })
+          ) {
+            fs.mkdirSync(folderName + "/src/scripts", { recursive: true });
+            console.log("/src/scripts created.");
+          }
+        } catch (err) {
+          console.error(err);
+        }
+
+        //
+        //  --- JavaScript ---
+        //
+
+        if (answers.js === "javascript") {
+          try {
+            // FOLDER: src/scripts/js
+
+            if (
+              !fs.existsSync(folderName + "/src/scripts/js", {
+                recursive: true,
+              })
+            ) {
+              fs.mkdirSync(folderName + "/src/scripts/js", { recursive: true });
+            }
+          } catch (err) {
+            console.error(err);
+          }
+        }
+
+        //
+        //  --- TypeScript ---
+        //
+
+        /*
       if (answers.js === 'typescript') {
 
         try {
@@ -224,111 +225,103 @@ inquirer
         } catch (err) {
           console.error(err);
         }
-        
+
       }
       */
 
-
-      //
-      // --- Static ---
-      //
-
-      try {
-        if (!fs.existsSync(folderName+'/src/static', { recursive: true })) {
-          fs.mkdirSync(folderName+'/src/static', { recursive: true });
-        }
-      } catch (err) {
-        console.error(err);
-      }
-
-      //
-      // --- Styles ---
-      //
-
-      try {
-
-        // FOLDER: src/styles
-
-        if (!fs.existsSync(folderName+'/src/styles', { recursive: true })) {
-          fs.mkdirSync(folderName+'/src/styles', { recursive: true });
-        }
-      } catch (err) {
-        console.error(err);
-      }
-
-
-      //
-      // --- SCSS ---
-      //
-
-      if(answers.css === 'scss' || answers.css === 'bootstrapcdn') {
+        //
+        // --- Static ---
+        //
 
         try {
-
-          // FOLDER: src/styles/sass
-
-          if (!fs.existsSync(folderName+'/src/styles/sass', { recursive: true })) {
-            fs.mkdirSync(folderName+'/src/styles/sass', { recursive: true });
+          if (!fs.existsSync(folderName + "/src/static", { recursive: true })) {
+            fs.mkdirSync(folderName + "/src/static", { recursive: true });
           }
-        
-          // FILE: src/styles/sass/sassy.scss
-        
-        const sassyContent = `
-        /** src/styles/sass/sassy.scss **/
-        `;
-
-        fs.writeFile(folderName+'/src/styles/sass/sassy.scss', sassyContent, err => {
-          if (err) {
-            console.error(err);
-          }
-        });
-        
         } catch (err) {
           console.error(err);
         }
 
-      }
-      
+        //
+        // --- Styles ---
+        //
 
-      //
-      // ----------------------  Creating FILES  ---------------------------- //
-      //
+        try {
+          // FOLDER: src/styles
 
+          if (!fs.existsSync(folderName + "/src/styles", { recursive: true })) {
+            fs.mkdirSync(folderName + "/src/styles", { recursive: true });
+          }
+        } catch (err) {
+          console.error(err);
+        }
 
-      //
-      // --- FILE: src/layouts/base.njk
-      //
+        //
+        // --- SCSS ---
+        //
 
-      // FILE: /src/layouts/base.njk
+        if (answers.css === "scss" || answers.css === "bootstrapcdn") {
+          try {
+            // FOLDER: src/styles/sass
 
-      let cssfile = '';
-      let jsfile = '';
-      let alpineStore = '';
-      let alpineCDN = '';
+            if (
+              !fs.existsSync(folderName + "/src/styles/sass", {
+                recursive: true,
+              })
+            ) {
+              fs.mkdirSync(folderName + "/src/styles/sass", {
+                recursive: true,
+              });
+            }
 
-      if(answers.css === 'scss') {
-        cssfile = "<link rel=\"stylesheet\" src=\"css/main.css\" />";
-      } else if (answers.css === 'bootstrapcdn') {
-        cssfile = `
-        <!-- Bootstrap CDN -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-        <!-- Custom styles from src/styles/sass/main.scss -->
-        <link rel=\"stylesheet\" src=\"css/main.css\" />`
-      }  
-      else if (answers.css === 'tailwind') {
-        cssfile = "<link rel=\"stylesheet\" src=\"css/tw.css\" />"
-      }  
+            // FILE: src/styles/sass/sassy.scss
 
-      if(answers.js === 'javascript') {
-        jsfile = "<script src=\"/script.js\"></script>";
-      } else {
-        jsfile = "<script src=\"/main.js\"></script>";
-      }
+            const sassyContent = `
+        /** src/styles/sass/sassy.scss **/
+        `;
 
-      if(answers.js === 'typescript') {
+            fs.writeFile(
+              folderName + "/src/styles/sass/sassy.scss",
+              sassyContent,
+              (err) => {
+                if (err) {
+                  console.error(err);
+                }
+              }
+            );
+          } catch (err) {
+            console.error(err);
+          }
+        }
 
-        alpineStore = `
+        //
+        // ----------------------  Creating FILES  ---------------------------- //
+        //
+
+        //
+        // --- FILE: src/layouts/base.njk
+        //
+
+        // FILE: /src/layouts/base.njk
+
+        let cssfile = "";
+        let jsfile = "";
+        let alpineStore = "";
+        let alpineCDN = "";
+
+        if (answers.css === "scss") {
+          cssfile = '<link rel="stylesheet" href="/main.css" />';
+        } else {
+          cssfile = '<link rel="stylesheet" href="/tw.css" />';
+        }
+
+        if (answers.js === "javascript") {
+          jsfile = '<script src="/script.js"></script>';
+        } else {
+          jsfile = '<script src="/main.js"></script>';
+        }
+
+        if (answers.js === "typescript") {
+          alpineStore = `
       <script>
         // Alpine Data Store, included into all pages via <body x-data="data">
         document.addEventListener('alpine:init', () => {
@@ -340,16 +333,16 @@ inquirer
               async init() {
 
               },
-                
+
           })) // End Alpine.data('data')
         }) // End EventListener
-      </script>`
+      </script>`;
 
-        alpineCDN = `
+          alpineCDN = `
         <!-- To use it as Module, Types need to be installed  -->
         <script src="//unpkg.com/alpinejs" defer></script>`;
-      }
-      
+        }
+
         const layoutBase = `
 <!DOCTYPE html>
 <html lang="en">
@@ -362,23 +355,22 @@ inquirer
     <link rel="author" href="/humans.txt" />
     <link rel="icon" href="/favicon.ico" />
 
-    <!-- Fonts for the Welcome page -->    
+    <!-- Fonts for the Welcome page -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Caveat&display=swap" rel="stylesheet"> 
-   
+    <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Caveat&display=swap" rel="stylesheet">
+    <!-- {% import '../../node_modules/zoumacros/cdn.njk' as cdn %} -->
+    <!-- {{ cdn.pkg('bulma') }} -->
+    <!-- https://github.com/AndiKod/zouMacros -->
     ${alpineCDN}
-       
     ${cssfile}
-
-
     {% block headStyles %}{% endblock %}
     {% block headScripts %}{% endblock %}
     </head>
-    <body x-data="data" x-init="init()">  
+    <body x-data="data" x-init="init()">
 
         {% block main %}{% endblock %}
-        
+
     ${jsfile}
 
     ${alpineStore}
@@ -386,13 +378,15 @@ inquirer
     </body>
 </html>`;
 
-        fs.writeFile(folderName+'/src/layouts/base.njk', layoutBase, err => {
-          if (err) {
-            console.error(err);
+        fs.writeFile(
+          folderName + "/src/layouts/base.njk",
+          layoutBase,
+          (err) => {
+            if (err) {
+              console.error(err);
+            }
           }
-         
-        });
-
+        );
 
         // FILE: /src/pages/index.njk
 
@@ -404,11 +398,11 @@ inquirer
 {# Actual visible content on the Page #}
 {% block main %}
 
-<main> 
+<main>
 <a href="https://github.com/AndiKod/zou" title="Github">
 	<h1>Zou!<span>JS</span></h1>
 </a>
-<h5>${project} project by ${answers.author}</h5>
+<h5 class="withMixin">${project} project by ${answers.author}</h5>
 </main>
 
 <!-- Minimal styles -->
@@ -472,38 +466,39 @@ a:hover {
 </style>
 
 {% endblock %}`;
-        fs.writeFile(folderName+'/src/pages/index.njk', contentIndexPage, err => {
-          if (err) {
-            console.error(err);
+        fs.writeFile(
+          folderName + "/src/pages/index.njk",
+          contentIndexPage,
+          (err) => {
+            if (err) {
+              console.error(err);
+            }
           }
-        });
+        );
 
+        //
+        // --- if Javascript ---
+        //
 
+        if (answers.js === "javascript") {
+          // FILE: src/scripts/main.js
 
-      //
-      // --- if Javascript ---
-      //
-      
-      if (answers.js === 'javascript') {
-
-        // FILE: src/scripts/main.js
-
-        const content = `import Alpine from 'alpinejs';
+          const content = `import Alpine from 'alpinejs';
 
 import './js/data-store.js';
 
 window.Alpine = Alpine
 Alpine.start()`;
-        fs.writeFile(folderName+'/src/scripts/main.js', content, err => {
-          if (err) {
-            console.error(err);
-          }
-          console.log('/src/scripts/main.js created.')
-        });
+          fs.writeFile(folderName + "/src/scripts/main.js", content, (err) => {
+            if (err) {
+              console.error(err);
+            }
+            console.log("/src/scripts/main.js created.");
+          });
 
-        // FILE: /src/scripts/js/data-store.js
+          // FILE: /src/scripts/js/data-store.js
 
-        const contentDataStore = `
+          const contentDataStore = `
 import Alpine from 'alpinejs';
 
 // Alpine Data Store, included into all pages via <body x-data="data">
@@ -516,33 +511,31 @@ document.addEventListener('alpine:init', () => {
       async init() {
 
       },
-         
+
   })) // End Alpine.data('data')
 }) // End EventListener`;
-        fs.writeFile(folderName+'/src/scripts/js/data-store.js', contentDataStore, err => {
-          if (err) {
-            console.error(err);
-          }
-          
-        });
+          fs.writeFile(
+            folderName + "/src/scripts/js/data-store.js",
+            contentDataStore,
+            (err) => {
+              if (err) {
+                console.error(err);
+              }
+            }
+          );
+        }
 
-        
-      }
+        //
+        // --- if TypeScript ---
+        //
 
+        if (answers.js === "typescript") {
+          // FILE: tsconfig.json
 
-      //
-      // --- if TypeScript ---
-      //
-      
-      if (answers.js === 'typescript') {
-
-
-        // FILE: tsconfig.json
-
-        const tsconfigContent = `{
+          const tsconfigContent = `{
           "compilerOptions": {
             /* Visit https://aka.ms/tsconfig.json to read more about this file */
-        
+
             /* Projects */
             // "incremental": true,                              /* Enable incremental compilation */
             // "composite": true,                                /* Enable constraints that allow a TypeScript project to be used with project references. */
@@ -550,7 +543,7 @@ document.addEventListener('alpine:init', () => {
             // "disableSourceOfProjectReferenceRedirect": true,  /* Disable preferring source files instead of declaration files when referencing composite projects */
             // "disableSolutionSearching": true,                 /* Opt a project out of multi-project reference checking when editing. */
             // "disableReferencedProjectLoad": true,             /* Reduce the number of projects loaded automatically by TypeScript. */
-        
+
             /* Language and Environment */
             "target": "ES6",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
             // "lib": [],                                        /* Specify a set of bundled library declaration files that describe the target runtime environment. */
@@ -563,7 +556,7 @@ document.addEventListener('alpine:init', () => {
             // "reactNamespace": "",                             /* Specify the object invoked for \`createElement\`. This only applies when targeting \`react\` JSX emit. */
             // "noLib": true,                                    /* Disable including any library files, including the default lib.d.ts. */
             // "useDefineForClassFields": true,                  /* Emit ECMAScript-standard-compliant class fields. */
-        
+
             /* Modules */
             "module": "commonjs",                                /* Specify what module code is generated. */
             // "rootDir": "./",                                  /* Specify the root folder within your source files. */
@@ -576,12 +569,12 @@ document.addEventListener('alpine:init', () => {
             // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
             // "resolveJsonModule": true,                        /* Enable importing .json files */
             // "noResolve": true,                                /* Disallow \`import\`s, \`require\`s or \`<reference>\`s from expanding the number of files TypeScript should add to a project. */
-        
+
             /* JavaScript Support */
             // "allowJs": true,                                  /* Allow JavaScript files to be a part of your program. Use the \`checkJS\` option to get errors from these files. */
             // "checkJs": true,                                  /* Enable error reporting in type-checked JavaScript files. */
             // "maxNodeModuleJsDepth": 1,                        /* Specify the maximum folder depth used for checking JavaScript files from \`node_modules\`. Only applicable with \`allowJs\`. */
-        
+
             /* Emit */
             // "declaration": true,                              /* Generate .d.ts files from TypeScript and JavaScript files in your project. */
             // "declarationMap": true,                           /* Create sourcemaps for d.ts files. */
@@ -606,14 +599,14 @@ document.addEventListener('alpine:init', () => {
             // "preserveConstEnums": true,                       /* Disable erasing \`const enum\` declarations in generated code. */
             // "declarationDir": "./",                           /* Specify the output directory for generated declaration files. */
             // "preserveValueImports": true,                     /* Preserve unused imported values in the JavaScript output that would otherwise be removed. */
-        
+
             /* Interop Constraints */
             // "isolatedModules": true,                          /* Ensure that each file can be safely transpiled without relying on other imports. */
             // "allowSyntheticDefaultImports": true,             /* Allow 'import x from y' when a module doesn't have a default export. */
             "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables \`allowSyntheticDefaultImports\` for type compatibility. */
             // "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
             "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
-        
+
             /* Type Checking */
             "strict": true,                                      /* Enable all strict type-checking options. */
             // "noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied \`any\` type.. */
@@ -634,71 +627,74 @@ document.addEventListener('alpine:init', () => {
             // "noPropertyAccessFromIndexSignature": true,       /* Enforces using indexed accessors for keys declared using an indexed type */
             // "allowUnusedLabels": true,                        /* Disable error reporting for unused labels. */
             // "allowUnreachableCode": true,                     /* Disable error reporting for unreachable code. */
-        
+
             /* Completeness */
             // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
             "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
           }
         }`;
 
-        fs.writeFile(folderName+'/tsconfig.json', tsconfigContent, err => {
-          if (err) {
-            console.error(err);
-          }
-        });
+          fs.writeFile(
+            folderName + "/tsconfig.json",
+            tsconfigContent,
+            (err) => {
+              if (err) {
+                console.error(err);
+              }
+            }
+          );
 
+          // FILE: src/scripts/main.ts
 
-        // FILE: src/scripts/main.ts
-
-        const content = `//   Do the TS stuff here :)  
+          const content = `//   Do the TS stuff here :)
         alert('Hello TypeScript!'); `;
 
-        fs.writeFile(folderName+'/src/scripts/main.ts', content, err => {
-          if (err) {
-            console.error(err);
-          }
-        });
-
-
-     
-      }
-
-
-      //
-      // --- SCSS ---
-      //
-      if(answers.css === 'scss') {
-
-        try {
-        
-          // FILE: src/styles/sass/sassy.scss
-        
-        const sassyContent = `
-        /** src/styles/sass/sassy.scss **/
-        `;
-
-        fs.writeFile(folderName+'/src/styles/sass/sassy.scss', sassyContent, err => {
-          if (err) {
-            console.error(err);
-          }
-
-        });
-        
-        } catch (err) {
-          console.error(err);
+          fs.writeFile(folderName + "/src/scripts/main.ts", content, (err) => {
+            if (err) {
+              console.error(err);
+            }
+          });
         }
 
-      }
-      
-      //
-      // --- Tailwind --- 
-      //
+        //
+        // --- SCSS ---
+        //
+        if (answers.css === "scss") {
+          try {
+            // FILE: src/styles/sass/main.scss
 
-      if (answers.css === 'tailwind') {
+            const sassyContent = `
+/** src/styles/main.scss **/
 
-        // FILE: src/tailwind.config.js
+@use "../../node_modules/zoumixins/cssowl/before" as owl;
 
-        const content = `
+.withMixin {
+  @include owl.cssowl-before-float("*", 4px 10px 0 0);
+}
+        `;
+
+            fs.writeFile(
+              folderName + "/src/styles/main.scss",
+              sassyContent,
+              (err) => {
+                if (err) {
+                  console.error(err);
+                }
+              }
+            );
+          } catch (err) {
+            console.error(err);
+          }
+        }
+
+        //
+        // --- Tailwind ---
+        //
+
+        if (answers.css === "tailwind") {
+          // FILE: src/tailwind.config.js
+
+          const content = `
         /** @type {import('tailwindcss').Config} **/
         module.exports = {
             content: ["./src/**/*.{html,njk,js}","./public/**/*.{html,js}"],
@@ -707,36 +703,38 @@ document.addEventListener('alpine:init', () => {
           },
           plugins: [],
       }`;
-        fs.writeFile(folderName+'/tailwind.config.js', content, err => {
-          if (err) {
-            console.error(err);
-          }
-          //console.log('tailwind.config.js created.')
-        });
+          fs.writeFile(folderName + "/tailwind.config.js", content, (err) => {
+            if (err) {
+              console.error(err);
+            }
+            //console.log('tailwind.config.js created.')
+          });
 
-        // FILE: src/styles/tw-input.css
+          // FILE: src/styles/tw-input.css
 
-        const twInputContent = `
+          const twInputContent = `
 @tailwind base;
 @tailwind components;
 @tailwind utilities;`;
-        fs.writeFile(folderName+'/src/styles/tw-input.css', twInputContent, err => {
-          if (err) {
-            console.error(err);
-          }
-          //console.log('src/styles/tw-input.css created.')
-        });
-        
-      }
+          fs.writeFile(
+            folderName + "/src/styles/tw-input.css",
+            twInputContent,
+            (err) => {
+              if (err) {
+                console.error(err);
+              }
+              //console.log('src/styles/tw-input.css created.')
+            }
+          );
+        }
 
+        //
+        // --- Nunjucks Config ---
+        //
 
-      //
-      // --- Nunjucks Config ---
-      //
+        // FILE: nunjucks.config.js
 
-      // FILE: nunjucks.config.js
-
-      const njkConfigContent = `
+        const njkConfigContent = `
 // nunjucks.config.js
 
 const data = {
@@ -757,13 +755,13 @@ module.exports = {
      *
      * Return false to skip rendering (and writing).
      */
-    beforeRender (nunjucksEnv, renderName, renderData) { 
-      let nunjucks = this;   
+    beforeRender (nunjucksEnv, renderName, renderData) {
+      let nunjucks = this;
 
       nunjucksEnv.addFilter('shorten', function(str, count) {
           return str.trim().slice(0, count || 5);
       });
-      
+
     },
     /**
      * A hook that's called after calling nunjucks.render()
@@ -804,15 +802,15 @@ module.exports = {
 
 };`;
 
-        fs.writeFile(folderName+'/nunjucks.config.js', njkConfigContent, err => {
-          if (err) {
-            console.error(err);
+        fs.writeFile(
+          folderName + "/nunjucks.config.js",
+          njkConfigContent,
+          (err) => {
+            if (err) {
+              console.error(err);
+            }
           }
-         
-        });
-
-
-
+        );
 
         //
         //  --- Package JSON ---
@@ -820,54 +818,53 @@ module.exports = {
 
         // FILE: package.json
 
-      let tailwindScript = ``; 
-      let sassScript = ``;
-      let jsScript = ``; 
-      let tsScript = ``; 
-      
-      if (answers.css === 'tailwind') {
-        tailwindScript = `
-        "w-tw": "npx tailwindcss -i ./src/styles/tw-input.css -o ./public/css/tw.css --watch",
-        "b-tw": "npx tailwindcss -i ./src/styles/tw-input.css -o ./public/css/tw.css --minify",`
-      } else {
-        tailwindScript = '';
-      }
-      if (answers.css === 'scss') {
-        sassScript = `
-        "w-sass": "sass  --no-source-map --watch src/styles/sass:public/css",
-        "b-sass": "sass  --no-source-map src/styles/sass:public/css --style compressed",`
-      } else {
-        sassScript = '';
-      }
-      if (answers.js === 'javascript') {
-        jsScript = `
+        let tailwindScript = ``;
+        let sassScript = ``;
+        let jsScript = ``;
+        let tsScript = ``;
+
+        if (answers.css === "tailwind") {
+          tailwindScript = `
+        "w-tw": "npx tailwindcss -i ./src/styles/tw-input.css -o ./public/tw.css --watch",
+        "b-tw": "npx tailwindcss -i ./src/styles/tw-input.css -o ./public/tw.css --minify",`;
+        } else {
+          tailwindScript = "";
+        }
+        if (answers.css === "scss") {
+          sassScript = `
+        "w-sass": "sass  --no-source-map --watch src/styles:public",
+        "b-sass": "sass  --no-source-map src/styles:public --style compressed",`;
+        } else {
+          sassScript = "";
+        }
+        if (answers.js === "javascript") {
+          jsScript = `
         "w-js": "npx esbuild src/scripts/main.js --outfile=public/script.js --bundle --watch",
-        "b-js": "npx esbuild src/scripts/main.js --outfile=public/script.js --bundle --minify",`
-      } else {
-        jsScript = '';
-      }
-      if (answers.js === 'typescript') {
-        tsScript = `
+        "b-js": "npx esbuild src/scripts/main.js --outfile=public/script.js --bundle --minify",`;
+        } else {
+          jsScript = "";
+        }
+        if (answers.js === "typescript") {
+          tsScript = `
         "w-ts": "npx tsc --watch",
-        "b-ts": "npx tsc && npx esbuild public/main.js --minify --outfile=public/main.min.js",`
-      } else {
-        tsScript = '';
-      }
+        "b-ts": "npx tsc && npx esbuild public/main.js --minify --outfile=public/main.min.js",`;
+        } else {
+          tsScript = "";
+        }
 
-      let sassPkg = '';
-      let twPkg = '';
-      let alpinePkg = '';
-      let pocketbPkg = '';
+        let sassPkg = "";
+        let twPkg = "";
+        let alpinePkg = "";
+        let pocketbPkg = "";
 
-      if(answers.css === 'scss') {
-        sassPkg = '"sass": "^1.69.4",';
-      }
-      if(answers.css === 'tailwind') {
-        twPkg = '"tailwindcss": "^3.3.3",'
-      }
+        if (answers.css === "scss") {
+          sassPkg = '"sass": "^1.69.4",';
+        }
+        if (answers.css === "tailwind") {
+          twPkg = '"tailwindcss": "^3.3.3",';
+        }
 
-   
-      const pkgJsonContent = `{
+        const pkgJsonContent = `{
   "name": "${project}",
   "version": "0.1.0",
   "description": "Say some words about your project",
@@ -904,34 +901,37 @@ module.exports = {
     "postcss": "^8.4.31",
     "postcss-cli": "^10.1.0",
     "autoprefixer": "^10.4.16",
-    "cssnano": "^6.0.1"   
+    "cssnano": "^6.0.1",
+    "zoumacros": "github:AndiKod/zouMacros",
+    "zoumixins": "github:AndiKod/zouMixins"
   }
 }`;
 
-        fs.writeFile(folderName+'/package.json', pkgJsonContent, err => {
+        fs.writeFile(folderName + "/package.json", pkgJsonContent, (err) => {
           if (err) {
             console.error(err);
           }
-
         });
         // end create package.json
 
+        //
+        // ---------------------- End Message ---------------------- //
+        //
 
+        console.log(
+          "\n" +
+            chalk.magenta("Ok " + chalk.bold(answers.author) + ", you Rock!")
+        );
+        console.log(
+          chalk.bold.whiteBright("Go: ") + "cd " + project + " && npm i"
+        );
+        console.log(chalk.bold.whiteBright("then: ") + "npm run dev");
 
-      //
-      // ---------------------- End Message ---------------------- //
-      //  
-        
-
-        console.log('\n'+chalk.magenta('Ok '+ chalk.bold(answers.author) +', you Rock!'))
-        console.log(chalk.bold.whiteBright('Go: ')+ 'cd '+project+' && npm i')
-        console.log(chalk.bold.whiteBright('then: ')+ 'npm run dev')
-
-        console.log('\n'+chalk.yellowBright.italic('Zou! Happy Coding!')+'\n')
-
+        console.log(
+          "\n" + chalk.yellowBright.italic("Zou! Happy Coding!") + "\n"
+        );
       }
     } catch (err) {
       console.error(err);
     }
-
   });
