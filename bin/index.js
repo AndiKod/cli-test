@@ -1,17 +1,22 @@
 #! /usr/bin/env node
 
-// Imports
-import chalk from "chalk";
-import inquirer from "inquirer";
-
 // Define "require"
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 
-const fs = require("fs");
+// Imports
+import chalk from "chalk";
+import inquirer from "inquirer";
+import fs from "fs";
+
+
+
+//const fs = require("fs");
 
 // ------------- End imports -------- //
 
+
+// Validate initial input (Project name)
 const args = process.argv.slice(2);
 if (args.length < 1) {
   console.error("Name your project: npx zou-create myProject");
@@ -22,6 +27,7 @@ if (args.length > 1) {
   process.exit(1); //an error occurred
 }
 
+// Project name
 let project = args[0];
 
 console.log(chalk.magenta.bold("-- Zou!", chalk.yellow("JS --")));
@@ -53,7 +59,7 @@ inquirer
     {
       type: "rawlist",
       name: "css",
-      message: chalk.blue("CSS flavor: "),
+      message: chalk.blue("CSS Flavor: "),
       choices: ["SCSS", "Tailwind"],
       filter(val) {
         return val.toLowerCase();
@@ -108,6 +114,26 @@ inquirer
         } catch (err) {
           console.error(err);
         }
+
+
+
+        //
+        // --- Data ---
+        //
+
+
+        try {
+          // FOLDER: src/data
+
+          if (
+            !fs.existsSync(folderName + "/src/data", { recursive: true })
+          ) {
+            fs.mkdirSync(folderName + "/src/data", { recursive: true });
+          }
+        } catch (err) {
+          console.error(err);
+        }
+
 
         //
         // --- Layouts ---
@@ -292,6 +318,46 @@ inquirer
         // ----------------------  Creating FILES  ---------------------------- //
         //
 
+
+
+        //
+        // --- Data Store ---
+        //
+
+
+
+
+        // FILE: src/data/store.js
+
+          const contentStore = `module.exports.links = [
+  {
+    url: "https://github.com/AndiKod/zou",
+    label: "Zou!JS Github",
+  },
+  {
+    url: "hhttps://mozilla.github.io/nunjucks/templating.html",
+    label: "Nunjucks",
+  },
+  {
+    url: "https://www.npmjs.com/package/zoumacros",
+    label: "zouMacros",
+  },
+];`;
+
+    
+
+fs.writeFile(folderName + "/src/data/store.js", contentStore, (err) => {
+      if (err) {
+        console.error(err);
+      }
+      
+    });
+
+  
+
+
+
+
         //
         // --- FILE: src/layouts/base.njk
         //
@@ -300,43 +366,52 @@ inquirer
 
         let cssfile = "";
         let jsfile = "";
-        let alpineStore = "";
-        let alpineCDN = "";
+        let darkSwitch = "";
+        let hyperscript = "<script src=\"https://unpkg.com/hyperscript.org@0.9.12\"></script>";
 
         if (answers.css === "scss") {
           cssfile = '<link rel="stylesheet" href="/main.css" />';
+          darkSwitch = `
+  <script>
+    // function to set a given theme/color-scheme
+    function setTheme(themeName) {
+        localStorage.setItem('zouTheme', themeName);
+        document.body.classList.add(themeName);
+        
+    }
+
+        // function to toggle between light and dark theme
+        function toggleTheme() {
+            if (localStorage.getItem('zouTheme') === 'dark') {
+                setTheme('light');
+                location.reload()
+            } else {
+                setTheme('dark');
+                location.reload()
+            }
+        }
+
+        // Immediately invoked function to set the theme on initial load
+        (function () {
+            if (localStorage.getItem('zouTheme') === 'dark') {
+                setTheme('dark');
+            } else {
+                setTheme('light');
+            }
+        })();
+    </script>`;
         } else {
           cssfile = '<link rel="stylesheet" href="/tw.css" />';
+          darkSwitch = '';
         }
 
         if (answers.js === "javascript") {
-          jsfile = '<script src="/script.js"></script>';
+          jsfile = `<script src="/script.js"></script>`;
         } else {
-          jsfile = '<script src="/main.js"></script>';
+          jsfile = `<script src="/main.js"></script>`;
         }
 
-        if (answers.js === "typescript") {
-          alpineStore = `
-      <script>
-        // Alpine Data Store, included into all pages via <body x-data="data">
-        document.addEventListener('alpine:init', () => {
-          Alpine.data('data', ()  => ({
-
-              name: '${project}',
-
-              // Fired on x-init
-              async init() {
-
-              },
-
-          })) // End Alpine.data('data')
-        }) // End EventListener
-      </script>`;
-
-          alpineCDN = `
-        <!-- To use it as Module, Types need to be installed  -->
-        <script src="//unpkg.com/alpinejs" defer></script>`;
-        }
+        
 
         const layoutBase = `
 <!DOCTYPE html>
@@ -349,27 +424,21 @@ inquirer
     <meta name="description" content="{% block pageDesc %}{% endblock %}">
     <link rel="author" href="/humans.txt" />
     <link rel="icon" href="/favicon.ico" />
-
     <!-- Fonts for the Welcome page -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Caveat&display=swap" rel="stylesheet">
-    <!-- {% import '../../node_modules/zoumacros/lib/cdn.njk' as cdn %} -->
-    <!-- {{ cdn.pkg('bulma') }} -->
-    <!-- https://github.com/AndiKod/zouMacros -->
-    ${alpineCDN}
     ${cssfile}
+    ${hyperscript}
     {% block headStyles %}{% endblock %}
     {% block headScripts %}{% endblock %}
     </head>
-    <body x-data="data" x-init="init()">
+    <body>
 
-        {% block main %}{% endblock %}
+      {% block main %}{% endblock %}
 
     ${jsfile}
-
-    ${alpineStore}
-
+    ${darkSwitch}
     </body>
 </html>`;
 
@@ -383,39 +452,94 @@ inquirer
           }
         );
 
+
+
         // FILE: /src/pages/index.njk
 
-        const contentIndexPage = `
-{% extends "src/layouts/base.njk" %}
-{% block pageTitle %} 👋 {% endblock %}
-{% block pageDesc %}My Zou! project{% endblock %}
+        let indexPage = "";
 
-{# Actual visible content on the Page #}
-{% block main %}
+        if (answers.css === "scss") {
 
-<main>
-<a href="https://github.com/AndiKod/zou" title="Github">
+          // SCSS based index page
+
+          indexPage = `<figure onclick="toggleTheme()">
+	<img src="https://icongr.am/feather/sun.svg?size=24&color=var(--text)">
+</figure>
+<main style="text-align:center;">
+	<img src="https://zoujs.vercel.app/static/images/z.png" width="50px">
 	<h1>Zou!<span>JS</span></h1>
-</a>
-<h5 class="withMixin">${project} project by ${answers.author}</h5>
+	<h2 _="on click call alert('///_Hyperscript is Working!')">${project} project by ${answers.author}</h2>
+	<nav style="margin-top:1.5rem;font-family:sans-serif;">
+		/ {% for link in data.links %} <a href="{{link.url}}">{{link.label}}</a> / {% endfor %} ...
+	</nav>
+</main>
+
+<!-- Minimal styles -->
+<style>
+body {
+	background: var(--bg);
+	background-size: 400% 400%;
+	animation: gradient 5s ease infinite;
+	height: 100vh;
+}
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+h1 {
+	font-family: boogaloo;
+	font-size: clamp(4rem, 16vw, 8rem);
+	text-shadow: 2px 2px 0 rgba(134, 194, 50, 0.6);
+}
+h1 > span {
+	font-size: clamp(1.8rem, 8vw, 4rem);
+	padding-left: clamp(0.2rem, 1vw, 1rem);
+	text-shadow: 2px 2px 0 rgba(245,190,37, 0.6);
+}
+
+h2 {
+	font-family: Caveat;
+	font-size: clamp(1.6rem, 6vw, 3rem);
+}
+
+a,
+a:visited,
+a:active {
+	color: var(--text-1);
+	text-decoration: underline;
+}
+</style>`;
+        } else {
+
+          // --- Tailwind Index HTML ---
+
+          indexPage = `
+<main class="text-center">
+	<img class="mx-auto mt-8" src="https://zoujs.vercel.app/static/images/z.png" width="50px">
+	<h1>Zou!<span>JS</span></h1>
+	<h2 _="on click call alert('///_Hyperscript is Working!')">${project} project by ${answers.author}</h2>
+	<nav style="margin-top:1.5rem;font-family:sans-serif;">
+		/ {% for link in data.links %} <a href="{{link.url}}">{{link.label}}</a> / {% endfor %} ...
+	</nav>
 </main>
 
 <!-- Minimal styles -->
 <style>
 
 body {
-	background: linear-gradient(-45deg, #e45126, #0c73b8, #f5be25, #86c232);
+	color: #eff2f4;
+	background: linear-gradient(-45deg, #d84d23, #e2af22, #86c232);
 	background-size: 400% 400%;
-	animation: gradient 10s ease infinite;
+	animation: gradient 5s ease infinite;
 	height: 100vh;
-
-	color: white;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
 }
-
 @keyframes gradient {
 	0% {
 		background-position: 0% 50%;
@@ -431,7 +555,6 @@ body {
 h1 {
 	font-family: boogaloo;
 	font-size: clamp(4rem, 16vw, 8rem);
-	margin-bottom: 2rem;
 	text-shadow: 2px 2px 0 rgba(134, 194, 50, 0.6);
 }
 h1 > span {
@@ -440,8 +563,7 @@ h1 > span {
 	text-shadow: 2px 2px 0 rgba(245,190,37, 0.6);
 }
 
-
-h5 {
+h2 {
 	font-family: Caveat;
 	font-size: clamp(1.6rem, 6vw, 3rem);
 }
@@ -449,17 +571,19 @@ h5 {
 a,
 a:visited,
 a:active {
-	color: white;
-	text-decoration: none;
-	transition: all 0.6s;
+	text-decoration: underline;
 }
+</style>`;
+        }
 
-a:hover {
-	color: white;
-	transform: scale(1.1) rotate(4deg);
-}
-</style>
+        const contentIndexPage = `
+{% extends "src/layouts/base.njk" %}
+{% block pageTitle %} 👋 {% endblock %}
+{% block pageDesc %}My Zou! project{% endblock %}
 
+{# Actual visible content on the Page #}
+{% block main %}
+${indexPage}
 {% endblock %}`;
         fs.writeFile(
           folderName + "/src/pages/index.njk",
@@ -478,46 +602,15 @@ a:hover {
         if (answers.js === "javascript") {
           // FILE: src/scripts/main.js
 
-          const content = `import Alpine from 'alpinejs';
+          const content = `// Hey there ;)`;
 
-import './js/data-store.js';
-
-window.Alpine = Alpine
-Alpine.start()`;
           fs.writeFile(folderName + "/src/scripts/main.js", content, (err) => {
             if (err) {
               console.error(err);
             }
-            console.log("/src/scripts/main.js created.");
+            
           });
 
-          // FILE: /src/scripts/js/data-store.js
-
-          const contentDataStore = `
-import Alpine from 'alpinejs';
-
-// Alpine Data Store, included into all pages via <body x-data="data">
-document.addEventListener('alpine:init', () => {
-  Alpine.data('data', ()  => ({
-
-      name: '${project}',
-
-      // Fired on x-init
-      async init() {
-
-      },
-
-  })) // End Alpine.data('data')
-}) // End EventListener`;
-          fs.writeFile(
-            folderName + "/src/scripts/js/data-store.js",
-            contentDataStore,
-            (err) => {
-              if (err) {
-                console.error(err);
-              }
-            }
-          );
         }
 
         //
@@ -655,18 +748,25 @@ document.addEventListener('alpine:init', () => {
         // --- SCSS ---
         //
         if (answers.css === "scss") {
-          try {
-            // FILE: src/styles/sass/main.scss
 
+          // FILE: src/styles/sass/main.scss
+          try {
+            
             const sassyContent = `
 /** src/styles/main.scss **/
 
+@use "_themes";
+@use "_colors";
 @use "../../node_modules/zoumixins/cssowl/before" as owl;
 
+@import "https://unpkg.com/open-props";
+
+/*
 .withMixin {
   @include owl.cssowl-before-float("*", 4px 10px 0 0);
+  color: var(--lime-8);
 }
-        `;
+*/`;
 
             fs.writeFile(
               folderName + "/src/styles/main.scss",
@@ -680,6 +780,81 @@ document.addEventListener('alpine:init', () => {
           } catch (err) {
             console.error(err);
           }
+
+
+
+          // FILE: src/styles/sass/_themes.scss
+          try {
+            
+            const themesPartial = `
+// Dark theme
+body.dark {
+  --bg: linear-gradient(-45deg, #d84d23, #e2af22, #86c232);
+  --brand: var(--lime-6);
+
+  --surface-1: var(--sand-10);
+  --text-1: var(--sand-0);
+}
+
+// Dark theme
+body.light {
+  --bg: linear-gradient(-45deg, #e7c6bb, rgb(173, 226, 188), #dcf0c1);
+  --brand: var(--lime-6);
+
+  --surface-1: var(--sand-0);
+  --text-1: var(--sand-10);
+}`;
+
+            fs.writeFile(
+              folderName + "/src/styles/_themes.scss",
+              themesPartial,
+              (err) => {
+                if (err) {
+                  console.error(err);
+                }
+              }
+            );
+          } catch (err) {
+            console.error(err);
+          }
+
+
+
+
+// FILE: src/styles/sass/_colors.scss
+          try {
+            
+            const colorsPartial = `
+body {
+  color: var(--text-1);
+}
+
+h1,
+h2,
+h3 {
+  color: var(--text-1);
+}`;
+
+            fs.writeFile(
+              folderName + "/src/styles/_colors.scss",
+              colorsPartial,
+              (err) => {
+                if (err) {
+                  console.error(err);
+                }
+              }
+            );
+          } catch (err) {
+            console.error(err);
+          }
+
+
+
+          
+
+
+
+
         }
 
         //
@@ -702,7 +877,7 @@ document.addEventListener('alpine:init', () => {
             if (err) {
               console.error(err);
             }
-            //console.log('tailwind.config.js created.')
+            
           });
 
           // FILE: src/styles/tw-input.css
@@ -710,7 +885,8 @@ document.addEventListener('alpine:init', () => {
           const twInputContent = `
 @tailwind base;
 @tailwind components;
-@tailwind utilities;`;
+@tailwind utilities;
+`;
           fs.writeFile(
             folderName + "/src/styles/tw-input.css",
             twInputContent,
@@ -718,7 +894,7 @@ document.addEventListener('alpine:init', () => {
               if (err) {
                 console.error(err);
               }
-              //console.log('src/styles/tw-input.css created.')
+              
             }
           );
         }
@@ -727,13 +903,16 @@ document.addEventListener('alpine:init', () => {
         // --- Nunjucks Config ---
         //
 
-        // FILE: nunjucks.config.js
+        // FILE: zou.config.js
 
-        const njkConfigContent = `
-// nunjucks.config.js
+        const njkConfigContent = `// zou.config.js
+
+/* Import Data file*/
+const store = require("./src/data/store.js");        
 
 const data = {
   appName: '${project}',
+  links: store.links
 };
 
 
@@ -798,7 +977,7 @@ module.exports = {
 };`;
 
         fs.writeFile(
-          folderName + "/nunjucks.config.js",
+          folderName + "/zou.config.js",
           njkConfigContent,
           (err) => {
             if (err) {
@@ -818,50 +997,48 @@ module.exports = {
         let jsScript = ``;
         let tsScript = ``;
 
-        if (answers.css === "tailwind") {
-          tailwindScript = `
-        "w-tw": "npx tailwindcss -i ./src/styles/tw-input.css -o ./public/tw.css --watch",
-        "b-tw": "npx tailwindcss -i ./src/styles/tw-input.css -o ./public/tw.css --minify",`;
-        } else {
-          tailwindScript = "";
-        }
-        if (answers.css === "scss") {
-          sassScript = `
-        "w-sass": "sass  --no-source-map --watch src/styles:public",
-        "b-sass": "sass  --no-source-map src/styles:public --style compressed",`;
-        } else {
-          sassScript = "";
-        }
-        if (answers.js === "javascript") {
-          jsScript = `
-        "w-js": "npx esbuild src/scripts/main.js --outfile=public/script.js --bundle --watch",
-        "b-js": "npx esbuild src/scripts/main.js --outfile=public/script.js --bundle --minify",`;
-        } else {
-          jsScript = "";
-        }
-        if (answers.js === "typescript") {
-          tsScript = `
-        "w-ts": "npx tsc --watch",
-        "b-ts": "npx tsc && npx esbuild public/main.js --minify --outfile=public/main.min.js",`;
-        } else {
-          tsScript = "";
-        }
+if (answers.css === "tailwind") {
+  tailwindScript = `
+"w-tw": "npx tailwindcss -i ./src/styles/tw-input.css -o ./public/tw.css --watch",
+"b-tw": "npx tailwindcss -i ./src/styles/tw-input.css -o ./public/tw.css --minify",`;
+} else {
+  tailwindScript = "";
+}
+if (answers.css === "scss") {
+  sassScript = `
+"w-sass": "sass  --no-source-map --watch src/styles:public",
+"b-sass": "sass  --no-source-map src/styles:public --style compressed",`;
+} else {
+  sassScript = "";
+}
+if (answers.js === "javascript") {
+  jsScript = `
+"w-js": "npx esbuild src/scripts/main.js --outfile=public/script.js --bundle --watch",
+"b-js": "npx esbuild src/scripts/main.js --outfile=public/script.js --bundle --minify",`;
+} else {
+  jsScript = "";
+}
+if (answers.js === "typescript") {
+  tsScript = `
+"w-ts": "npx tsc --watch",
+"b-ts": "npx tsc && npx esbuild public/main.js --minify --outfile=public/main.min.js",`;
+} else {
+  tsScript = "";
+}
 
-        let sassPkg = "";
-        let twPkg = "";
-        let alpinePkg = "";
-        let pocketbPkg = "";
+let sassPkg = "";
+let twPkg = "";
 
-        if (answers.css === "scss") {
-          sassPkg = '"sass": "^1.69.4",';
-        }
-        if (answers.css === "tailwind") {
-          twPkg = '"tailwindcss": "^3.3.3",';
-        }
+if (answers.css === "scss") {
+  sassPkg = '"sass": "^1.69.4",';
+}
+if (answers.css === "tailwind") {
+  twPkg = '"tailwindcss": "^3.3.3",';
+}
 
         const pkgJsonContent = `{
   "name": "${project}",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Say some words about your project",
   "author": "${answers.author}",
   "license": "ISC",
@@ -871,7 +1048,7 @@ module.exports = {
     ${sassScript}
     ${jsScript}
     ${tsScript}
-    "b-pages": "nunjucks-to-html --baseDir src/pages",
+    "b-pages": "nunjucks-to-html --config zou.config.js --baseDir src/pages",
     "c-static": "copyfiles -u 1 \\"./src/static/**/*\\" \\"public\\"",
     "c-root": "copyfiles -u 1 \\"./src/favicon.ico\\" \\"./src/*.txt\\"   \\"public\\"",
     "copy": "npm-run-all --parallel c-*",
@@ -882,9 +1059,7 @@ module.exports = {
     "dev": "npm-run-all copy b-pages --parallel watch serve",
     "postbuild": "postcss public/css/*.css -u autoprefixer cssnano -r --no-map"
   },
-  "dependencies": {
-    "alpinejs": "^3.13.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     ${sassPkg}
     ${twPkg}
@@ -897,8 +1072,8 @@ module.exports = {
     "postcss-cli": "^10.1.0",
     "autoprefixer": "^10.4.16",
     "cssnano": "^6.0.1",
-    "zoumacros": "github:AndiKod/zouMacros",
-    "zoumixins": "github:AndiKod/zouMixins"
+    "zoumacros": "^1.3.0",
+    "zoumixins": "^1.0.0"
   }
 }`;
 
