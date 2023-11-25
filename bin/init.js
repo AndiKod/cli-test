@@ -100,9 +100,10 @@ inquirer
 
     try {
       // FOLDER: "root"
+      let ok = true;
+      // I know ^^ will do a real thing later
+      if (ok) {
 
-      if (!fs.existsSync(folderName)) {
-        fs.mkdirSync(folderName);
 
         //
         // --- Src Folder ---
@@ -111,8 +112,8 @@ inquirer
         // FOLDER: src
 
         try {
-          if (!fs.existsSync(folderName + "src", { recursive: true })) {
-            fs.mkdirSync(folderName + "src", { recursive: true });
+          if (!fs.existsSync("src", { recursive: true })) {
+            fs.mkdirSync("src", { recursive: true });
           }
         } catch (err) {
           console.error(err);
@@ -129,9 +130,9 @@ inquirer
           // FOLDER: src/data
 
           if (
-            !fs.existsSync(folderName + "src/data", { recursive: true })
+            !fs.existsSync("src/data", { recursive: true })
           ) {
-            fs.mkdirSync(folderName + "src/data", { recursive: true });
+            fs.mkdirSync("src/data", { recursive: true });
           }
         } catch (err) {
           console.error(err);
@@ -146,9 +147,9 @@ inquirer
           // FOLDER: src/layouts
 
           if (
-            !fs.existsSync(folderName + "src/layouts", { recursive: true })
+            !fs.existsSync("src/layouts", { recursive: true })
           ) {
-            fs.mkdirSync(folderName + "src/layouts", { recursive: true });
+            fs.mkdirSync("src/layouts", { recursive: true });
           }
         } catch (err) {
           console.error(err);
@@ -159,8 +160,8 @@ inquirer
         //
 
         try {
-          if (!fs.existsSync(folderName + "src/macros", { recursive: true })) {
-            fs.mkdirSync(folderName + "src/macros", { recursive: true });
+          if (!fs.existsSync("src/macros", { recursive: true })) {
+            fs.mkdirSync("src/macros", { recursive: true });
           }
         } catch (err) {
           console.error(err);
@@ -173,8 +174,8 @@ inquirer
         try {
           // FOLDER: /src/pages
 
-          if (!fs.existsSync(folderName + "src/pages", { recursive: true })) {
-            fs.mkdirSync(folderName + "src/pages", { recursive: true });
+          if (!fs.existsSync("src/pages", { recursive: true })) {
+            fs.mkdirSync("src/pages", { recursive: true });
           }
         } catch (err) {
           console.error(err);
@@ -188,9 +189,9 @@ inquirer
           // FOLDER: /src/partials
 
           if (
-            !fs.existsSync(folderName + "src/partials", { recursive: true })
+            !fs.existsSync("src/partials", { recursive: true })
           ) {
-            fs.mkdirSync(folderName + "src/partials", { recursive: true });
+            fs.mkdirSync("src/partials", { recursive: true });
           }
         } catch (err) {
           console.error(err);
@@ -204,9 +205,9 @@ inquirer
           // FOLDER: src/scripts
 
           if (
-            !fs.existsSync(folderName + "src/scripts", { recursive: true })
+            !fs.existsSync("src/scripts", { recursive: true })
           ) {
-            fs.mkdirSync(folderName + "src/scripts", { recursive: true });
+            fs.mkdirSync("src/scripts", { recursive: true });
           }
         } catch (err) {
           console.error(err);
@@ -221,11 +222,11 @@ inquirer
             // FOLDER: src/scripts/js
 
             if (
-              !fs.existsSync(folderName + "src/scripts/js", {
+              !fs.existsSync("src/scripts/js", {
                 recursive: true,
               })
             ) {
-              fs.mkdirSync(folderName + "src/scripts/js", { recursive: true });
+              fs.mkdirSync("src/scripts/js", { recursive: true });
             }
           } catch (err) {
             console.error(err);
@@ -258,8 +259,8 @@ inquirer
         //
 
         try {
-          if (!fs.existsSync(folderName + "src/static", { recursive: true })) {
-            fs.mkdirSync(folderName + "src/static", { recursive: true });
+          if (!fs.existsSync("src/static", { recursive: true })) {
+            fs.mkdirSync("src/static", { recursive: true });
           }
         } catch (err) {
           console.error(err);
@@ -272,8 +273,8 @@ inquirer
         try {
           // FOLDER: src/styles
 
-          if (!fs.existsSync(folderName + "src/styles", { recursive: true })) {
-            fs.mkdirSync(folderName + "src/styles", { recursive: true });
+          if (!fs.existsSync("src/styles", { recursive: true })) {
+            fs.mkdirSync("src/styles", { recursive: true });
           }
         } catch (err) {
           console.error(err);
@@ -288,11 +289,11 @@ inquirer
             // FOLDER: src/styles/sass
 
             if (
-              !fs.existsSync(folderName + "src/styles/sass", {
+              !fs.existsSync("src/styles/sass", {
                 recursive: true,
               })
             ) {
-              fs.mkdirSync(folderName + "src/styles/sass", {
+              fs.mkdirSync("src/styles/sass", {
                 recursive: true,
               });
             }
@@ -304,7 +305,7 @@ inquirer
         `;
 
             fs.writeFile(
-              folderName + "src/styles/sass/sassy.scss",
+              "src/styles/sass/sassy.scss",
               sassyContent,
               (err) => {
                 if (err) {
@@ -349,7 +350,7 @@ inquirer
 
     
 
-fs.writeFile(folderName + "src/data/store.js", contentStore, (err) => {
+fs.writeFile("src/data/store.js", contentStore, (err) => {
       if (err) {
         console.error(err);
       }
@@ -446,7 +447,7 @@ fs.writeFile(folderName + "src/data/store.js", contentStore, (err) => {
 </html>`;
 
         fs.writeFile(
-          folderName + "src/layouts/base.njk",
+          "src/layouts/base.njk",
           layoutBase,
           (err) => {
             if (err) {
@@ -589,7 +590,7 @@ a:active {
 ${indexPage}
 {% endblock %}`;
         fs.writeFile(
-          folderName + "src/pages/index.njk",
+          "src/pages/index.njk",
           contentIndexPage,
           (err) => {
             if (err) {
@@ -607,7 +608,7 @@ ${indexPage}
 
           const content = `// Hey there ;)`;
 
-          fs.writeFile(folderName + "src/scripts/main.js", content, (err) => {
+          fs.writeFile("src/scripts/main.js", content, (err) => {
             if (err) {
               console.error(err);
             }
@@ -726,7 +727,7 @@ ${indexPage}
         }`;
 
           fs.writeFile(
-            folderName + "tsconfig.json",
+            "tsconfig.json",
             tsconfigContent,
             (err) => {
               if (err) {
@@ -740,7 +741,7 @@ ${indexPage}
           const content = `//   Do the TS stuff here :)
         alert('Hello TypeScript!'); `;
 
-          fs.writeFile(folderName + "src/scripts/main.ts", content, (err) => {
+          fs.writeFile("src/scripts/main.ts", content, (err) => {
             if (err) {
               console.error(err);
             }
@@ -772,7 +773,7 @@ ${indexPage}
 */`;
 
             fs.writeFile(
-              folderName + "src/styles/main.scss",
+              "src/styles/main.scss",
               sassyContent,
               (err) => {
                 if (err) {
@@ -809,7 +810,7 @@ body.light {
 }`;
 
             fs.writeFile(
-              folderName + "src/styles/_themes.scss",
+              "src/styles/_themes.scss",
               themesPartial,
               (err) => {
                 if (err) {
@@ -839,7 +840,7 @@ h3 {
 }`;
 
             fs.writeFile(
-              folderName + "src/styles/_colors.scss",
+              "src/styles/_colors.scss",
               colorsPartial,
               (err) => {
                 if (err) {
@@ -876,7 +877,7 @@ h3 {
           },
           plugins: [],
       }`;
-          fs.writeFile(folderName + "tailwind.config.js", content, (err) => {
+          fs.writeFile("tailwind.config.js", content, (err) => {
             if (err) {
               console.error(err);
             }
@@ -891,7 +892,7 @@ h3 {
 @tailwind utilities;
 `;
           fs.writeFile(
-            folderName + "src/styles/tw-input.css",
+            "src/styles/tw-input.css",
             twInputContent,
             (err) => {
               if (err) {
@@ -980,7 +981,7 @@ module.exports = {
 };`;
 
         fs.writeFile(
-          folderName + "zou.config.js",
+          "zou.config.js",
           njkConfigContent,
           (err) => {
             if (err) {
@@ -1080,7 +1081,7 @@ if (answers.css === "tailwind") {
   }
 }`;
 
-        fs.writeFile(folderName + "package.json", pkgJsonContent, (err) => {
+        fs.writeFile("package.json", pkgJsonContent, (err) => {
           if (err) {
             console.error(err);
           }
