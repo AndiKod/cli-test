@@ -31,7 +31,7 @@ if (args.length > 1) {
 */
 
 // Project name
-let project = args[0];
+let project = "";
 
 console.log(chalk.magenta.bold("-- Zou!", chalk.yellow("JS --")));
 console.log(
