@@ -1,7 +1,7 @@
 {
   "name": "zou-create",
   "version": "1.1.0",
-  "description": "Scafold Zou!JS projects, little SSG built on NPM scripts like a tasks runner.",
+  "description": "Moved from 'zou-create' to 'zoucli'.",
   "main": "index.js",
   "type": "module",
   "bin": {
@@ -11,16 +11,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "Zou!JS",
-    "CLI",
-    "Nunjucks",
-    "SCSS",
-    "OpenProps",
-    "Hyperscript",
-    "TailwindCSS",
-    "TypeScript"
-  ],
+  "keywords": [],
   "author": "Andrei Curelaru",
   "license": "ISC",
   "dependencies": {
